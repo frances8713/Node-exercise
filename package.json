@@ -1,0 +1,10 @@
+{
+ "name": "node",
+ "version": "1.0.0",
+ "description" : "",
+ "main" : "index.js",
+ "keywords": [],
+ "author": "Francesca Foglietta",
+ "license": "ISC",
+ "type": "module"
+}
