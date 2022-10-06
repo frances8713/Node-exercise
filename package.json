@@ -6,6 +6,9 @@
   "scripts": {
     "test": "jest"
   },
+  "engines": {
+    "node": ">=16"
+  },
   "dependencies": {
     "fastify": "^4.7.0",
     "figlet": "^1.5.2"
