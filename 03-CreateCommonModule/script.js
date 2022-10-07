@@ -1,3 +1,3 @@
-const message = require ("./message")
+const message = require("./message");
 
-message("Hello dude")
+message("Hello dude");

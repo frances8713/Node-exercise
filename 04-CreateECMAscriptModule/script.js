@@ -1,3 +1,3 @@
 import outputLanguage from "./outputLanguage.js";
 
-outputLanguage("Italian")
+outputLanguage("Italian");
