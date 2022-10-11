@@ -24,7 +24,6 @@ function luckyDraw(player) {
         console.error(error)
     }
  }
-
  getResults()
 
 //Create a getResults function that uses async and await.
