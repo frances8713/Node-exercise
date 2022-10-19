@@ -33,3 +33,16 @@ test("GET /colors", async () => {
     expect(response.body).toEqual(colors);
 });
 
+//facendo npm test compare l'errore :
+// TypeError: mock.mockReset is not a function
+
+// 10 |
+// 11 | beforeEach(() => {
+// > 12 |   mockReset(prismaMock)
+//    |            ^
+// 13 | })
+// 14 |
+// 15 | export const prismaMock = prisma as unknown as DeepMockProxy<PrismaClient>
+
+//ma questo dovrebbe far parte da ciò che dal codice presente in client.mock.ts che sarebbe quello copiato
+//dal sito di jest.
