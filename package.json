@@ -15,9 +15,12 @@
   },
   "dependencies": {
     "@prisma/client": "^4.4.0",
+    "@sinclair/typebox": "^0.24.47",
+    "ajv-formats": "^2.1.1",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-async-errors": "^3.1.1",
+    "express-json-validator-middleware": "^3.0.1",
     "fastify": "^4.7.0",
     "figlet": "^1.5.2"
   },
