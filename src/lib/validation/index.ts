@@ -13,7 +13,7 @@ export const validate = validator.validate;
 export const validationErrorMiddleware: ErrorRequestHandler = (error, request, response, next) => {
     if (error instanceof ValidationError) {
         response.status(422).send({
-            error: error.validationErrors
+            errors: error.validationErrors
         });
         next();
     } else {
