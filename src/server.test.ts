@@ -6,18 +6,14 @@ const request = supertest(app);
 test("GET /colors", async () => {
     const colors = [
         {
-            id: 6,
             name: "Yellow",
-            description: null,
-            createAt: "2022-10-19T14:02:16.861Z",
-            updateAt: "2022-10-19T14:02:02.610Z"
+            description: "null",
+
         },
         {
-            id: 7,
             name: "Green",
-            description: null,
-            createAt: "2022-10-19T14:02:16.861Z",
-            updateAt: "2022-10-19T14:02:06.822Z"
+            description: "null",
+
         }
     ];
     //@ts-ignore
@@ -31,20 +27,58 @@ test("GET /colors", async () => {
     expect(response.body).toEqual(colors);
     });
 
-    test("POST /colors", async () => {
-        const color =
-            {
-                id: 6,
-                name: "Yellow",
-                description: null,
-            };
+        // test("POST /colors", async () => {
+        // const color =
+        //     {
+        //         name: "Yellow",
+        //         description: "miao",
+        //     };
+
+        // const response = await request
+        //     .post("/colors")
+        //     .send(color)
+        //     .expect(201)
+        //     .expect("Content-Type", /application\/json/);
+
+        // expect(response.body).toEqual(color);
+        // });
 
 
-        const response = await request
-            .post("/colors")
-            .send(color)
-            .expect(201)
-            .expect("Content-Type", /application\/json/);
+    describe("POST /colors", () => {
+        test("Valid request", async () => {
+            const color =
+                {
+                    name: "Yellow",
+                    description: "null",
+                };
 
-        expect(response.body).toEqual(color);
-        });
+
+            const response = await request
+                .post("/colors")
+                .send(color)
+                .expect(201)
+                .expect("Content-Type", /application\/json/);
+
+            expect(response.body).toEqual(color);
+            });
+
+        test("Invalid request", async () => {
+            const color =
+                {
+                    description: "null",
+                };
+
+
+            const response = await request
+                .post("/colors")
+                .send(color)
+                .expect(422)
+                .expect("Content-Type", /application\/json/);
+
+                expect(response.body).toEqual({
+                    errors: {
+                        body: expect.any(Array)
+                    }
+                });
+            });
+});
