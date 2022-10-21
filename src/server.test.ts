@@ -21,7 +21,8 @@ describe("GET /colors", () => {
     const response = await request
         .get("/colors")
         .expect(200)
-        .expect("Content-Type", /application\/json/);
+        .expect("Content-Type", /application\/json/)
+        .expect("Access-Control-Allow-Origin", "http://localhost:8080");
 
     expect(response.body).toEqual(colors);
     });
@@ -89,7 +90,8 @@ describe("POST /colors", () => {
                 description: "null",
             })
             .expect(201)
-            .expect("Content-Type", /application\/json/);
+            .expect("Content-Type", /application\/json/)
+            .expect("Access-Control-Allow-Origin", "http://localhost:8080");
 
         expect(response.body).toEqual(color);
     });
@@ -119,7 +121,7 @@ describe("PUT /colors/:id", () => {
             id: 8,
             name: "Yellow",
             description: "miao",
-            prova: "prova", //so che non passa nel test e per farti vedere che ho fatto il passaggio.
+            // prova: "prova", //so che non passa nel test e per farti vedere che ho fatto il passaggio.
             createAt: "2022-10-21T10:35:15.553Z",
             updateAt: "2022-10-21T10:35:15.553Z",
         };
@@ -132,10 +134,12 @@ describe("PUT /colors/:id", () => {
             .send({
                 name: "Yellow",
                 description: "miao",
-                prova: "prova" //so che non passa nel test e per farti vedere che ho fatto il passaggio.
+                // prova: "prova" //so che non passa nel test e per farti vedere che ho fatto il passaggio.
             })
             .expect(200)
-            .expect("Content-Type", /application\/json/);
+            .expect("Content-Type", /application\/json/)
+            .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+
 
         expect(response.body).toEqual(color);
     });
@@ -208,7 +212,8 @@ describe("DELETE /color/:id", () => {
     const response = await request
         .delete("/colors/34")
         .expect(404)
-        .expect("Content-Type" , /text\/html/);
+        .expect("Content-Type" , /text\/html/)
+        .expect("Access-Control-Allow-Origin", "http://localhost:8080");
 
         expect(response.text).toContain("Cannot DELETE /colors/34");
     });
