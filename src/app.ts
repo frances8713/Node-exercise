@@ -1,16 +1,14 @@
 import express from "express";
 import "express-async-errors";
-import { AllowedSchema } from "express-json-validator-middleware";
 import prisma from "./lib/prisma/client"
 
-//da qui
+
 import {
     validate,
     validationErrorMiddleware,
     colorSchema,
     ColorData
  } from "./lib/validation";
-//a qui e poi aggiungo il validate body
 
 const app = express();
 
@@ -21,32 +19,58 @@ const colors = await prisma.colors.findMany();
 response.json(colors)
 });
 
+app.get("/colors/:id(\\d+)", async (request, response, next) => {
+    const colorId = Number(request.params.id)
+    const color = await prisma.colors.findUnique({
+        where: {id : colorId}});
 
-const addressSchema : AllowedSchema = {
-    type: "object",
-    required: ["number", "street", "type"],
-    properties: {
-      number: {
-        type: "number",
-      },
-      street: {
-        type: "string",
-      },
-      type: {
-        type: "string",
-        enum: ["Street", "Avenue", "Boulevard"],
-      },
-    },
-  };
+        if(!color) {
+            response.status(404);
+            return next(`Cannot GET /colors/${colorId}`)
+        }
+        response.json(color)
+    });
 
 
 app.post("/colors", validate({ body: colorSchema}), async (request, response) => {
-    const color : ColorData = request.body;
+    const colorData : ColorData = request.body;
+
+    const color = await prisma.colors.create({
+        data : colorData
+    })
     response.status(201).json(color)
     });
 
-// da qui
+app.put("/colors/:id(\\d+)", validate({ body: colorSchema}), async (request, response, next) => {
+    const colorId = Number(request.params.id);
+    const colorData : ColorData = request.body;
+
+    try{
+        const color = await prisma.colors.update({
+            where: { id: colorId },
+            data : colorData
+        });
+        response.status(200).json(color)
+    } catch(error) {
+        response.status(404);
+        next(`Cannot PUT /colors/${colorId}`);
+    };
+});
+
+app.delete("/colors/:id(\\d+)", async (request, response, next) => {
+    const colorId = Number(request.params.id);
+    try {
+        await prisma.colors.delete({
+            where: { id: colorId }
+        });
+        response.status(204).end()
+    } catch(error) {
+        response.status(404);
+        next(`Cannot DELETE /colors/${colorId}`);
+    };
+});
+
+
 app.use(validationErrorMiddleware);
-// a qui
 
 export default app;
