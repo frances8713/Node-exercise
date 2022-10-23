@@ -2,14 +2,10 @@ import express from "express";
 import "express-async-errors";
 import prisma from "./lib/prisma/client";
 import cors from "cors";
+import { validate, validationErrorMiddleware, colorSchema, ColorData} from "./lib/validation";
+import { initMulterMiddleware } from "./lib/middleware/multer";
 
-
-import {
-    validate,
-    validationErrorMiddleware,
-    colorSchema,
-    ColorData
- } from "./lib/validation";
+ const upload = initMulterMiddleware();
 
  const corsOptions = {
     origin: "http://localhost:8080"
@@ -75,6 +71,20 @@ app.delete("/colors/:id(\\d+)", async (request, response, next) => {
         response.status(404);
         next(`Cannot DELETE /colors/${colorId}`);
     };
+});
+
+app.post("/colors/:id(\\d+)/photo",
+    upload.single("photo"),
+async (request, response, next) => {
+    console.log("request.file", request.file);
+
+    if(!request.file) {
+        response.status(400)
+        return next("No photo file uploaded.");
+    }
+
+    const photoFilename = request.file.filename;
+    response.status(201).json({ photoFilename })
 });
 
 

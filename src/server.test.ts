@@ -229,4 +229,32 @@ describe("DELETE /color/:id", () => {
 
 });
 
+//test depends on multer.mock.ts, use multer.memoryStorage so no files are written to disk
 
+     describe("POST /colors/:id/photo", () => {
+        test("Valid request with PNG file upload", async () => {
+            await request
+                .post("/colors/23/photo")
+                .attach("photo", "test-fixtures/file.png")
+                .expect(201)
+                .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+        });
+
+        test("Invalid request with PNG file upload", async () => {
+            const response = await request
+            .post("/colors/asdfg/photo")
+            .expect(404)
+            .expect("Content-Type", /text\/html/);
+
+        expect(response.text).toContain("Cannot POST /colors/asdfg/photo");
+    });
+
+    test("Invalid request with no file upload", async () => {
+        const response = await request
+        .post("/colors/34/photo")
+        .expect(400)
+        .expect("Content-Type", /text\/html/);
+
+        expect(response.text).toContain("No photo file uploaded.");
+    });
+});
