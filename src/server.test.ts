@@ -240,6 +240,24 @@ describe("DELETE /color/:id", () => {
                 .expect("Access-Control-Allow-Origin", "http://localhost:8080");
         });
 
+        test("Valid request with JPG file upload", async () => {
+            await request
+                .post("/colors/23/photo")
+                .attach("photo", "test-fixtures/file.jpg")
+                .expect(201)
+                .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+        });
+
+        test("Invalid request with text file upload", async () => {
+            const response = await request
+                .post("/colors/23/photo")
+                .attach("photo", "test-fixtures/file.txt")
+                .expect(500)
+                .expect("Content-Type", /text\/html/);
+
+            expect(response.text).toContain("Error: The uploaded file must be a jPG o PNG image.") ;
+        });
+
         test("Invalid request with PNG file upload", async () => {
             const response = await request
             .post("/colors/asdfg/photo")
