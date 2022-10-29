@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<body>
+    <form action="http://localhost:3000/colors" id="form-add">
+        <label>
+            <strong>Name:</strong>
+            <input type="text" name="name">
+        </label>
+
+        <label>
+            <strong>Description:</strong>
+            <input type="text" name="description">
+        </label>
+
+        <input type="submit" value="add color">
+    </form>
+
+    <script>
+
+        async function addColor (event) {
+            event.preventDefault();
+
+            const form = event.currentTarget;
+
+            const formData = new FormData(form);
+            const plainFormData = Object.fromEntries(formData.entries());
+            const formDataJsonString = JSON.stringify(plainFormData);
+
+            const url = form.action;
+
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: formDataJsonString,
+            });
+
+            const color = await response.json();
+
+            console.dir(color);
+        }
+
+            const addForm = document.getElementById("form-add");
+
+            addForm.addEventListener("submit", addColor);
+    </script>
+</body>
+</html>
