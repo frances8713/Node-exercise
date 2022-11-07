@@ -33,8 +33,8 @@ router.get("/", async (request, response) => {
         const color = await prisma.colors.create({
             data : {
                 ...colorData,
-                createdBy: username, //ho provato a cambiare con ts ma mi da sempre errore
-                updatedBy: username,
+                // createdBy: username, //ho provato a cambiare con ts ma mi da sempre errore
+                // updatedBy: username,
         }
     });
         response.status(201).json(color)
