@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import prisma from "../lib/prisma/client";
 import { validate, colorSchema, ColorData} from "../lib/middleware/validation";
+import { checkAuthorization } from "../lib/middleware/passport";
 import { initMulterMiddleware } from "../lib/middleware/multer";
 
 const upload = initMulterMiddleware();
@@ -25,16 +26,21 @@ router.get("/", async (request, response) => {
 
 
 
-    router.post("/", validate({ body: colorSchema}), async (request, response) => {
+    router.post("/", checkAuthorization, validate({ body: colorSchema}), async (request, response) => {
         const colorData : ColorData = request.body;
+        const username = request.user?.username as string;
 
         const color = await prisma.colors.create({
-            data : colorData
-        })
+            data : {
+                ...colorData,
+                createdBy: username, //ho provato a cambiare con ts ma mi da sempre errore
+                updatedBy: username,
+        }
+    });
         response.status(201).json(color)
         });
 
-    router.put("/:id(\\d+)", validate({ body: colorSchema}), async (request, response, next) => {
+    router.put("/:id(\\d+)", checkAuthorization, validate({ body: colorSchema}), async (request, response, next) => {
         const colorId = Number(request.params.id);
         const colorData : ColorData = request.body;
 
@@ -50,7 +56,7 @@ router.get("/", async (request, response) => {
         };
     });
 
-    router.delete("/:id(\\d+)", async (request, response, next) => {
+    router.delete("/:id(\\d+)", checkAuthorization, async (request, response, next) => {
         const colorId = Number(request.params.id);
         try {
             await prisma.colors.delete({
@@ -64,6 +70,7 @@ router.get("/", async (request, response) => {
     });
 
     router.post("/:id(\\d+)/photo",
+        checkAuthorization,
         upload.single("photo"),
     async (request, response, next) => {
 
