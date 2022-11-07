@@ -15,7 +15,9 @@ model Colors {
     name        String      @db.VarChar(255)
     description     String?
     createAt        DateTime    @default(now())
+    createdBy       String?     @db.VarChar(255)
     updateAt        DateTime    @updatedAt
+    updatedBy       String?     @db.VarChar(255)
 }
 
 
